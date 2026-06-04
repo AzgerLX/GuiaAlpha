@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Herramientas de Inteligencia Artificial</title>
+<link href="Estilopagweb.css" rel="stylesheet">
+<style>
+:root {
+  --bg: #010c18;
+  --bg2: #021426;
+  --card: #021d38;
+  --card2: #031f3d;
+  --border: rgba(0,170,255,0.18);
+  --neon: #00aaff;
+  --bright: #38d0ff;
+  --glow: #00d4ff;
+  --pale: #a0d8ef;
+  --white: #dff0ff;
+  --dim: #5a8faa;
+  --gold: #f5c842;
+  --green: #00e896;
+  --orange: #ff8c00;
+  --red: #ff4060;
+  --yellow: #ffe000;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* Grid bg */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,170,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,170,255,0.04) 1px, transparent 1px);
+  background-size:70px 70px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Scanlines */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px);
+  pointer-events:none;
+  z-index:1;
+}
+
+/* HEADER */
+header {
+  position:relative;
+  z-index:10;
+  text-align:center;
+  padding:70px 20px 50px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(0,150,255,0.07) 0%, transparent 100%);
+  overflow:hidden;
+}
+
+header::before {
+  content:'';
+  position:absolute;
+  top:-60%;
+  left:50%;
+  transform:translateX(-50%);
+  width:900px; height:500px;
+  background:radial-gradient(ellipse, rgba(0,170,255,0.1) 0%, transparent 65%);
+  pointer-events:none;
+}
+
+.header-eyebrow {
+  font-family:'Orbitron', monospace;
+  font-size:9px;
+  letter-spacing:7px;
+  color:var(--neon);
+  text-transform:uppercase;
+  margin-bottom:18px;
+  opacity:0;
+  animation:fadeUp 0.7s ease forwards 0.1s;
+}
+
+header h1 {
+  font-family:'Orbitron', monospace;
+  font-size:clamp(22px,4.5vw,52px);
+  font-weight:900;
+  line-height:1.1;
+  letter-spacing:2px;
+  background:linear-gradient(135deg, var(--white) 30%, var(--bright) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  opacity:0;
+  animation:fadeUp 0.7s ease forwards 0.25s;
+}
+
+.header-sub {
+  margin-top:16px;
+  font-size:13px;
+  letter-spacing:3px;
+  color:var(--dim);
+  text-transform:uppercase;
+  opacity:0;
+  animation:fadeUp 0.7s ease forwards 0.4s;
+}
+
+.header-meta {
+  margin-top:32px;
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  flex-wrap:wrap;
+  opacity:0;
+  animation:fadeUp 0.7s ease forwards 0.55s;
+}
+
+.meta-item {
+  font-family:'Orbitron', monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  color:var(--dim);
+  text-transform:uppercase;
+  border:1px solid var(--border);
+  padding:8px 18px;
+  border-radius:2px;
+  background:rgba(0,170,255,0.04);
+}
+
+.meta-item span {
+  display:block;
+  color:var(--pale);
+  font-size:10px;
+  margin-top:3px;
+  font-family:'Exo 2', sans-serif;
+  letter-spacing:0;
+  font-weight:400;
+}
+
+/* NAV FILTER */
+.nav-filter {
+  position:relative; z-index:10;
+  display:flex; gap:10px;
+  justify-content:center; flex-wrap:wrap;
+  padding:30px 20px;
+  border-bottom:1px solid var(--border);
+  background:rgba(2,20,40,0.8);
+}
+
+.filter-btn {
+  font-family:'Orbitron', monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border:1px solid var(--border);
+  background:rgba(0,170,255,0.05);
+  color:var(--dim);
+  padding:8px 20px;
+  border-radius:2px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  border-color:var(--neon);
+  color:var(--neon);
+  background:rgba(0,170,255,0.1);
+  box-shadow:0 0 12px rgba(0,170,255,0.2);
+}
+
+/* COUNTER */
+.stats-bar {
+  position:relative; z-index:10;
+  display:flex; justify-content:center; gap:50px;
+  padding:22px 20px;
+  border-bottom:1px solid var(--border);
+  background:rgba(2,12,28,0.9);
+  flex-wrap:wrap;
+}
+
+.stat {
+  text-align:center;
+}
+.stat-num {
+  font-family:'Orbitron', monospace;
+  font-size:26px;
+  font-weight:900;
+  color:var(--neon);
+  line-height:1;
+  text-shadow:0 0 20px rgba(0,170,255,0.5);
+}
+.stat-label {
+  font-size:9px;
+  letter-spacing:2px;
+  color:var(--dim);
+  text-transform:uppercase;
+  margin-top:5px;
+}
+
+/* MAIN GRID */
+main {
+  position:relative; z-index:10;
+  max-width:1400px;
+  margin:0 auto;
+  padding:50px 24px 80px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(360px,1fr));
+  gap:28px;
+}
+
+/* AI CARD */
+.ai-card {
+  background:linear-gradient(145deg, var(--card) 0%, var(--card2) 100%);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:32px 28px 28px;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  opacity:0;
+  animation:fadeUp 0.6s ease forwards;
+}
+
+.ai-card:hover {
+  transform:translateY(-6px);
+  box-shadow:0 20px 60px rgba(0,100,200,0.25), 0 0 30px rgba(0,170,255,0.08);
+  border-color:rgba(0,170,255,0.4);
+}
+
+.ai-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  background:linear-gradient(90deg, transparent, var(--neon), transparent);
+  opacity:0.6;
+}
+
+.ai-card::after {
+  content:'';
+  position:absolute;
+  top:-40px; right:-40px;
+  width:120px; height:120px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(0,170,255,0.06) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+/* Card header row */
+.card-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:14px;
+  gap:12px;
+}
+
+.ai-name {
+  font-family:'Orbitron', monospace;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:var(--white);
+  line-height:1.2;
+}
+
+.ai-company {
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--dim);
+  text-transform:uppercase;
+  margin-top:4px;
+}
+
+/* Rating badge */
+.rating {
+  font-family:'Orbitron', monospace;
+  font-size:9px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  padding:5px 12px;
+  border-radius:2px;
+  white-space:nowrap;
+  flex-shrink:0;
+  font-weight:600;
+}
+
+.rating-excelente {
+  background:rgba(0,232,150,0.12);
+  color:var(--green);
+  border:1px solid rgba(0,232,150,0.35);
+  text-shadow:0 0 8px rgba(0,232,150,0.4);
+}
+.rating-buena {
+  background:rgba(0,170,255,0.12);
+  color:var(--neon);
+  border:1px solid rgba(0,170,255,0.35);
+  text-shadow:0 0 8px rgba(0,170,255,0.4);
+}
+.rating-regular {
+  background:rgba(255,140,0,0.12);
+  color:var(--orange);
+  border:1px solid rgba(255,140,0,0.35);
+  text-shadow:0 0 8px rgba(255,140,0,0.3);
+}
+.rating-mala {
+  background:rgba(255,64,96,0.1);
+  color:var(--red);
+  border:1px solid rgba(255,64,96,0.3);
+}
+
+/* Type tags */
+.type-tags {
+  display:flex; gap:8px; flex-wrap:wrap;
+  margin-bottom:16px;
+}
+
+.tag {
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:4px 10px;
+  border-radius:2px;
+  border:1px solid rgba(0,170,255,0.2);
+  color:var(--dim);
+  background:rgba(0,170,255,0.04);
+}
+
+.tag-texto { border-color:rgba(56,208,255,0.3); color:#38d0ff; }
+.tag-imagen { border-color:rgba(150,80,255,0.35); color:#b478ff; }
+.tag-audio { border-color:rgba(0,232,150,0.3); color:var(--green); }
+.tag-video { border-color:rgba(255,200,0,0.3); color:#ffc800; }
+.tag-codigo { border-color:rgba(255,140,0,0.3); color:var(--orange); }
+.tag-multimodal { border-color:rgba(255,100,130,0.3); color:#ff8aab; }
+
+/* Divider */
+.divider {
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--border), transparent);
+  margin:18px 0;
+}
+
+/* Section labels */
+.section-label {
+  font-family:'Orbitron', monospace;
+  font-size:8px;
+  letter-spacing:3px;
+  color:var(--neon);
+  text-transform:uppercase;
+  margin-bottom:8px;
+  opacity:0.7;
+}
+
+/* Description text */
+.desc {
+  font-size:13px;
+  line-height:1.75;
+  color:var(--pale);
+  font-weight:300;
+}
+
+/* How it works */
+.how {
+  font-size:12.5px;
+  line-height:1.7;
+  color:#7aadcc;
+  font-weight:300;
+}
+
+/* Link */
+.card-link {
+  display:inline-block;
+  margin-top:22px;
+  font-family:'Orbitron', monospace;
+  font-size:9px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--neon);
+  text-decoration:none;
+  border:1px solid rgba(0,170,255,0.35);
+  padding:10px 22px;
+  border-radius:2px;
+  background:rgba(0,170,255,0.05);
+  transition:all 0.3s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.card-link::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(0,170,255,0.08), transparent);
+  transform:translateX(-100%);
+  transition:transform 0.4s ease;
+}
+
+.card-link:hover {
+  background:rgba(0,170,255,0.12);
+  box-shadow:0 0 20px rgba(0,170,255,0.25);
+  color:var(--bright);
+  border-color:var(--neon);
+}
+
+.card-link:hover::before {
+  transform:translateX(100%);
+}
+
+/* FOOTER */
+footer {
+  position:relative; z-index:10;
+  text-align:center;
+  padding:40px 20px;
+  border-top:1px solid var(--border);
+  background:linear-gradient(0deg, rgba(0,150,255,0.04) 0%, transparent 100%);
+}
+
+footer p {
+  font-family:'Orbitron', monospace;
+  font-size:9px;
+  letter-spacing:3px;
+  color:var(--dim);
+  text-transform:uppercase;
+  line-height:2;
+}
+
+footer .footer-title {
+  font-size:11px;
+  color:var(--pale);
+  margin-bottom:8px;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.ai-card:nth-child(1)  { animation-delay:0.05s; }
+.ai-card:nth-child(2)  { animation-delay:0.10s; }
+.ai-card:nth-child(3)  { animation-delay:0.15s; }
+.ai-card:nth-child(4)  { animation-delay:0.20s; }
+.ai-card:nth-child(5)  { animation-delay:0.25s; }
+.ai-card:nth-child(6)  { animation-delay:0.30s; }
+.ai-card:nth-child(7)  { animation-delay:0.35s; }
+.ai-card:nth-child(8)  { animation-delay:0.40s; }
+.ai-card:nth-child(9)  { animation-delay:0.45s; }
+.ai-card:nth-child(10) { animation-delay:0.50s; }
+.ai-card:nth-child(11) { animation-delay:0.55s; }
+.ai-card:nth-child(12) { animation-delay:0.60s; }
+.ai-card:nth-child(13) { animation-delay:0.65s; }
+.ai-card:nth-child(14) { animation-delay:0.70s; }
+.ai-card:nth-child(15) { animation-delay:0.75s; }
+.ai-card:nth-child(16) { animation-delay:0.80s; }
+
+/* HIDDEN CARDS (filter) */
+.ai-card.hidden {
+  display:none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:#010c18; }
+::-webkit-scrollbar-thumb { background:rgba(0,170,255,0.3); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:rgba(0,170,255,0.5); }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <p class="header-eyebrow">Unidad Educativa Fiscal Los Shyris &mdash; Bachillerato General Tecnico</p>
+  <h1>Herramientas de Inteligencia<br>Artificial Disponibles en la Web</h1>
+  <p class="header-sub">Guia de Uso y Funcionamiento &mdash; Proyecto de Grado 2025&ndash;2026</p>
+  <div class="header-meta">
+    <div class="meta-item">Autoras<span>De la Cruz P. Belen / Liberio A. Shirley</span></div>
+    <div class="meta-item">Tutora<span>Esp. Katy Jimenez</span></div>
+    <div class="meta-item">Periodo<span>2025 &mdash; 2026</span></div>
+  </div>
+</header>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num">16</div><div class="stat-label">Herramientas analizadas</div></div>
+  <div class="stat"><div class="stat-num">5</div><div class="stat-label">Categorias</div></div>
+  <div class="stat"><div class="stat-num">7</div><div class="stat-label">Excelentes</div></div>
+</div>
+
+<!-- FILTERS -->
+<div class="nav-filter">
+  <button class="filter-btn active" onclick="filter('all',this)">Todas</button>
+  <button class="filter-btn" onclick="filter('texto',this)">Texto</button>
+  <button class="filter-btn" onclick="filter('imagen',this)">Imagen</button>
+  <button class="filter-btn" onclick="filter('audio',this)">Audio</button>
+  <button class="filter-btn" onclick="filter('codigo',this)">Codigo</button>
+  <button class="filter-btn" onclick="filter('video',this)">Video</button>
+</div>
+
+<!-- CARDS -->
+<main id="grid">
+
+  <!-- 1. ChatGPT -->
+  <div class="ai-card" data-tags="texto codigo multimodal">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">ChatGPT</div>
+        <div class="ai-company">OpenAI</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-texto">Texto</span>
+      <span class="tag tag-codigo">Codigo</span>
+      <span class="tag tag-imagen">Imagen</span>
+      <span class="tag tag-multimodal">Multimodal</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Asistente conversacional de gran capacidad creado por OpenAI. Es el modelo de lenguaje mas utilizado en el mundo, capaz de mantener conversaciones extensas, redactar textos, resolver problemas matematicos, traducir idiomas y mucho mas.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Utiliza modelos GPT-4o entrenados con enormes volumenes de texto. Predice la siguiente palabra en una secuencia de forma probabilistica para generar respuestas coherentes y contextuales. Admite texto e imagenes como entrada.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Redactar correos, resumir documentos, responder preguntas, programar, aprender, investigar y crear contenido escrito de cualquier tipo. Es de uso libre con cuenta gratuita.</p>
+    <a href="https://chat.openai.com" target="_blank" class="card-link">Visitar chat.openai.com</a>
+  </div>
+
+  <!-- 2. Claude -->
+  <div class="ai-card" data-tags="texto codigo multimodal">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Claude</div>
+        <div class="ai-company">Anthropic</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-texto">Texto</span>
+      <span class="tag tag-codigo">Codigo</span>
+      <span class="tag tag-multimodal">Multimodal</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Asistente de IA desarrollado por Anthropic con un enfoque especial en seguridad y confiabilidad. Destaca en el analisis de documentos largos, escritura creativa y razonamiento complejo.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Basado en modelos de lenguaje de gran escala entrenados con tecnicas de aprendizaje por refuerzo con retroalimentacion humana (RLHF) y un metodo propio llamado Aprendizaje por Preferencia Constitucional.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Analizar textos extensos, redactar con estilo cuidado, programar, responder preguntas complejas y trabajar con documentos PDF. Tiene version gratuita disponible.</p>
+    <a href="https://claude.ai" target="_blank" class="card-link">Visitar claude.ai</a>
+  </div>
+
+  <!-- 3. Gemini -->
+  <div class="ai-card" data-tags="texto imagen codigo multimodal">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Gemini</div>
+        <div class="ai-company">Google DeepMind</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-texto">Texto</span>
+      <span class="tag tag-imagen">Imagen</span>
+      <span class="tag tag-codigo">Codigo</span>
+      <span class="tag tag-multimodal">Multimodal</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Modelo multimodal de Google integrado con sus servicios como Gmail, Docs y Search. Puede procesar texto, imagenes, audio y video de forma nativa. Es la apuesta principal de Google en IA generativa.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Arquitectura transformer multimodal que procesa distintos tipos de datos de forma conjunta. Se integra con la busqueda de Google para responder con informacion actualizada en tiempo real.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Busquedas avanzadas, redaccion, analisis de imagenes, ayuda en Google Workspace (Docs, Sheets, Gmail) y programacion. Cuenta gratuita disponible en gemini.google.com.</p>
+    <a href="https://gemini.google.com" target="_blank" class="card-link">Visitar gemini.google.com</a>
+  </div>
+
+  <!-- 4. Copilot -->
+  <div class="ai-card" data-tags="texto imagen codigo multimodal">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Microsoft Copilot</div>
+        <div class="ai-company">Microsoft / OpenAI</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-texto">Texto</span>
+      <span class="tag tag-imagen">Imagen</span>
+      <span class="tag tag-codigo">Codigo</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Asistente de IA de Microsoft basado en modelos GPT-4 de OpenAI, integrado en Windows, Bing, Edge y Office 365. Combina busqueda web en tiempo real con capacidades de generacion de contenido.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Ejecuta modelos GPT-4o con acceso a internet a traves de Bing Search. Puede buscar informacion actualizada, generar imagenes con DALL-E y operar dentro de aplicaciones de Microsoft 365.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Buscar informacion actualizada, generar textos e imagenes, ayudar en Word, Excel y PowerPoint, y resumir paginas web desde el navegador Edge. Gratis con cuenta Microsoft.</p>
+    <a href="https://copilot.microsoft.com" target="_blank" class="card-link">Visitar copilot.microsoft.com</a>
+  </div>
+
+  <!-- 5. DALL-E -->
+  <div class="ai-card" data-tags="imagen">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">DALL-E 3</div>
+        <div class="ai-company">OpenAI</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-imagen">Imagen</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Generador de imagenes a partir de texto desarrollado por OpenAI. Con solo describir lo que quieres ver, DALL-E crea imagenes originales, ilustraciones, arte digital y fotografias sinteticas de alta calidad.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Modelo de difusion que convierte descripciones de texto (prompts) en imagenes. Aprende la relacion entre palabras e imagenes a partir de millones de pares texto-imagen durante su entrenamiento.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Crear ilustraciones para proyectos escolares, imagenes para redes sociales, arte conceptual, portadas, logos y cualquier imagen que puedas describir con palabras. Disponible en ChatGPT.</p>
+    <a href="https://openai.com/dall-e-3" target="_blank" class="card-link">Visitar openai.com/dall-e-3</a>
+  </div>
+
+  <!-- 6. Midjourney -->
+  <div class="ai-card" data-tags="imagen">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Midjourney</div>
+        <div class="ai-company">Midjourney Inc.</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-imagen">Imagen</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Herramienta de generacion de imagenes artisticas conocida por producir resultados de altisima calidad estetica. Es ampliamente usada por disenadores, artistas digitales y creativos profesionales.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Modelo de difusion accesible a traves de Discord. El usuario escribe un prompt en el chat y el bot genera cuatro variantes de imagen. Permite ajustar estilos, ratios, calidad y nivel de detalle.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Crear arte digital de alta calidad, ilustraciones conceptuales, fondos, personajes y cualquier imagen con estilo artistico avanzado. Requiere suscripcion de pago (no hay plan gratuito permanente).</p>
+    <a href="https://www.midjourney.com" target="_blank" class="card-link">Visitar midjourney.com</a>
+  </div>
+
+  <!-- 7. Stable Diffusion -->
+  <div class="ai-card" data-tags="imagen">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Stable Diffusion</div>
+        <div class="ai-company">Stability AI</div>
+      </div>
+      <div class="rating rating-buena">Buena</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-imagen">Imagen</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Modelo de generacion de imagenes de codigo abierto que puede instalarse localmente o usarse en plataformas web. Es muy flexible y personalizable, siendo preferido por usuarios tecnicos que desean control total.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Modelo de difusion latente que genera imagenes reduciendo el ruido progresivamente a partir de un vector aleatorio guiado por el texto del prompt. Al ser open-source, puede ajustarse con modelos personalizados.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Generar imagenes, editar fotos existentes, crear variaciones de imagenes y entrenar modelos propios. Disponible gratis via Hugging Face y otras plataformas web.</p>
+    <a href="https://stablediffusionweb.com" target="_blank" class="card-link">Visitar stablediffusionweb.com</a>
+  </div>
+
+  <!-- 8. ElevenLabs -->
+  <div class="ai-card" data-tags="audio">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">ElevenLabs</div>
+        <div class="ai-company">ElevenLabs Inc.</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-audio">Audio</span>
+      <span class="tag tag-texto">Texto</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Plataforma lideres en sintesis de voz con IA. Convierte texto en voz hablada de forma extremadamente natural, con docenas de voces disponibles y soporte para multiples idiomas incluyendo el espanol.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Usa modelos neuronales de sintesis de voz (TTS) entrenados con grandes cantidades de audio humano. Puede clonar una voz a partir de una muestra de audio de pocos segundos.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Crear narraciones para videos, audiolibros, podcasts, asistentes de voz, doblajes y material educativo. Tiene plan gratuito con 10.000 caracteres al mes.</p>
+    <a href="https://elevenlabs.io" target="_blank" class="card-link">Visitar elevenlabs.io</a>
+  </div>
+
+  <!-- 9. Runway ML -->
+  <div class="ai-card" data-tags="video imagen">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Runway ML</div>
+        <div class="ai-company">Runway AI Inc.</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-video">Video</span>
+      <span class="tag tag-imagen">Imagen</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Suite de herramientas de IA para creacion de video, edicion y efectos visuales. Es una de las plataformas mas avanzadas para generar videos a partir de texto o imagenes de referencia.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Modelos de video generativo (Gen-2, Gen-3) que aprenden movimiento, iluminacion y composicion visual. Permiten generar clips cortos describiendo la escena en texto o partiendo de una imagen.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Producir videos cortos, efectos visuales, eliminar fondos en video, crear transiciones cinematicas y experimentar con video arte. Plan gratuito con creditos limitados.</p>
+    <a href="https://runwayml.com" target="_blank" class="card-link">Visitar runwayml.com</a>
+  </div>
+
+  <!-- 10. GitHub Copilot -->
+  <div class="ai-card" data-tags="codigo texto">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">GitHub Copilot</div>
+        <div class="ai-company">GitHub / OpenAI</div>
+      </div>
+      <div class="rating rating-excelente">Excelente</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-codigo">Codigo</span>
+      <span class="tag tag-texto">Texto</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Asistente de programacion con IA que se integra directamente en editores de codigo como Visual Studio Code. Sugiere lineas y funciones completas mientras escribes, acelerando el desarrollo de software.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Basado en el modelo Codex de OpenAI, entrenado con millones de repositorios publicos de codigo en GitHub. Analiza el contexto del archivo abierto y predice el codigo mas probable.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Autocompletar codigo, explicar funciones, detectar errores, escribir pruebas automaticas y acelerar el aprendizaje de nuevos lenguajes de programacion. Gratis para estudiantes con GitHub Education.</p>
+    <a href="https://github.com/features/copilot" target="_blank" class="card-link">Visitar github.com/features/copilot</a>
+  </div>
+
+  <!-- 11. Perplexity AI -->
+  <div class="ai-card" data-tags="texto">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Perplexity AI</div>
+        <div class="ai-company">Perplexity AI Inc.</div>
+      </div>
+      <div class="rating rating-buena">Buena</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-texto">Texto</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Motor de busqueda conversacional impulsado por IA que responde preguntas con informacion actualizada de internet, citando las fuentes de cada afirmacion para mayor confiabilidad.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Combina modelos de lenguaje con busqueda web en tiempo real. Analiza multiples fuentes, sintetiza la informacion y genera una respuesta clara con citas verificables al pie.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Investigar temas, verificar informacion reciente, hacer trabajos escolares con fuentes confiables y explorar noticias de actualidad con respuestas sintetizadas. Version gratuita disponible.</p>
+    <a href="https://www.perplexity.ai" target="_blank" class="card-link">Visitar perplexity.ai</a>
+  </div>
+
+  <!-- 12. Suno AI -->
+  <div class="ai-card" data-tags="audio">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Suno AI</div>
+        <div class="ai-company">Suno Inc.</div>
+      </div>
+      <div class="rating rating-buena">Buena</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-audio">Audio</span>
+      <span class="tag tag-texto">Texto</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Generador de canciones completas con IA. A partir de una descripcion de texto, crea musica original con letra, melodia, ritmo e instrumentacion en distintos generos musicales.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Modelos generativos de audio entrenados con grandes colecciones musicales. El usuario describe el estilo y tema deseado y la IA compone y sintetiza la cancion completa en segundos.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Crear canciones para proyectos personales, videos, podcasts, jingles o simplemente experimentar con la composicion musical sin necesidad de conocimientos previos. Plan gratuito disponible.</p>
+    <a href="https://suno.com" target="_blank" class="card-link">Visitar suno.com</a>
+  </div>
+
+  <!-- 13. DeepL -->
+  <div class="ai-card" data-tags="texto">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">DeepL</div>
+        <div class="ai-company">DeepL SE</div>
+      </div>
+      <div class="rating rating-buena">Buena</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-texto">Texto</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Traductor automatico basado en redes neuronales reconocido como el mas preciso del mercado. Supera a Google Translate en fluidez y naturalidad, especialmente en idiomas europeos.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Redes neuronales entrenadas especificamente para traduccion que comprenden el contexto de oraciones completas en lugar de traducir palabra por palabra, generando texto mas natural.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Traducir textos, documentos y paginas web entre 31 idiomas con alta precision. Ideal para trabajos escolares, correo electronico y documentos formales. Plan gratuito hasta 500.000 caracteres.</p>
+    <a href="https://www.deepl.com" target="_blank" class="card-link">Visitar deepl.com</a>
+  </div>
+
+  <!-- 14. Canva AI -->
+  <div class="ai-card" data-tags="imagen texto video">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Canva IA</div>
+        <div class="ai-company">Canva Pty Ltd.</div>
+      </div>
+      <div class="rating rating-buena">Buena</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-imagen">Imagen</span>
+      <span class="tag tag-texto">Texto</span>
+      <span class="tag tag-video">Video</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Plataforma de diseno grafico que integra multiples herramientas de IA para generar imagenes, textos, presentaciones y videos dentro de su editor. Es muy popular entre estudiantes y docentes.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Integra modelos de terceros (Stable Diffusion, GPT) dentro de su interfaz de diseno. El usuario puede generar imagenes, escribir textos con IA o crear presentaciones automaticamente desde un prompt.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Disenar presentaciones, posters, infografias, publicaciones para redes sociales y material educativo con asistencia de IA. Plan gratuito muy completo en canva.com.</p>
+    <a href="https://www.canva.com" target="_blank" class="card-link">Visitar canva.com</a>
+  </div>
+
+  <!-- 15. Notion AI -->
+  <div class="ai-card" data-tags="texto">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Notion IA</div>
+        <div class="ai-company">Notion Labs</div>
+      </div>
+      <div class="rating rating-regular">Regular</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-texto">Texto</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">Asistente de IA integrado dentro de la aplicacion de notas y productividad Notion. Ayuda a redactar, resumir, corregir y organizar contenido directamente en los documentos del usuario.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Llama a modelos GPT via API directamente desde el editor de Notion. Analiza el contenido del bloque actual y aplica la accion solicitada: resumir, ampliar, corregir o traducir el texto.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Redactar apuntes, resumir textos largos, mejorar la escritura y organizar ideas dentro del entorno de Notion. La IA requiere plan de pago adicional dentro de Notion.</p>
+    <a href="https://www.notion.so" target="_blank" class="card-link">Visitar notion.so</a>
+  </div>
+
+  <!-- 16. Google Translate con IA -->
+  <div class="ai-card" data-tags="texto audio">
+    <div class="card-header">
+      <div>
+        <div class="ai-name">Google Translate</div>
+        <div class="ai-company">Google</div>
+      </div>
+      <div class="rating rating-regular">Regular</div>
+    </div>
+    <div class="type-tags">
+      <span class="tag tag-texto">Texto</span>
+      <span class="tag tag-audio">Audio</span>
+    </div>
+    <div class="divider"></div>
+    <p class="section-label">Descripcion</p>
+    <p class="desc">El traductor mas usado del mundo con soporte para mas de 130 idiomas. Usa redes neuronales para traducir texto, voz, imagenes y conversaciones en tiempo real, aunque con menor precision que DeepL.</p>
+    <div class="divider"></div>
+    <p class="section-label">Como funciona</p>
+    <p class="how">Utiliza el sistema Google Neural Machine Translation (GNMT), un modelo de redes neuronales recurrentes que procesa oraciones completas para producir traducciones mas naturales que los sistemas anteriores.</p>
+    <div class="divider"></div>
+    <p class="section-label">Para que sirve</p>
+    <p class="desc">Traducir texto, audio, imagenes con texto, sitios web y conversaciones en tiempo real entre personas de distintos idiomas. Completamente gratuito en translate.google.com.</p>
+    <a href="https://translate.google.com" target="_blank" class="card-link">Visitar translate.google.com</a>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-title">Guia de Uso y Funcionamiento de Herramientas de Inteligencia Artificial Disponibles en la Web</p>
+  <p>Unidad Educativa Fiscal Los Shyris &mdash; Bachillerato General Tecnico &mdash; 2025&ndash;2026</p>
+  <p>De la Cruz Pachacama Belen Carolina &mdash; Liberio Astudillo Shirley Estefania</p>
+  <p>Tutora: Esp. Katy Jimenez</p>
+</footer>
+
+<script>
+function filter(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.querySelectorAll('.ai-card').forEach(card => {
+    if (type === 'all') {
+      card.classList.remove('hidden');
+    } else {
+      const tags = card.dataset.tags || '';
+      if (tags.includes(type)) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    }
+  });
+}
+</script>
+
+</body>
+</html>
